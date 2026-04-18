@@ -1,0 +1,28 @@
+plugins {
+    id 'base'
+}
+
+def useMavenWrapper = true
+def mvnCmd = useMavenWrapper ? './mvnw' : 'mvn'
+
+tasks.register('mavenVerifyM2', Exec) {
+    group = 'build'
+    description = 'Runs Maven clean verify with profile m2'
+    commandLine mvnCmd, 'clean', 'verify', '-Pm2'
+}
+
+tasks.register('mavenVerifyP2', Exec) {
+    group = 'build'
+    description = 'Runs Maven clean verify with profile p2'
+    commandLine mvnCmd, 'clean', 'verify', '-Pp2'
+}
+
+tasks.register('verifyP2') {
+    group = 'build'
+    description = 'Runs Maven clean verify with profile p2'
+    dependsOn tasks.named('mavenVerifyP2')
+}
+
+tasks.named('build') {
+    dependsOn tasks.named('mavenVerifyM2')
+}
